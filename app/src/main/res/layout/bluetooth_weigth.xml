@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+        <Switch
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:id="@+id/bluetooth_switch"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="蓝牙开关：" />
+        <Button
+            android:text="搜索"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/bluetooth_search"
+            android:onClick="bluetooth_search"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:id="@+id/bluetooth_spinner">
+        </Spinner>
+
+        <Button
+            android:text="连接"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/bluetooth_connect"
+            />
+    </LinearLayout>
+</LinearLayout>
