@@ -3,6 +3,7 @@ package com.example.wyk.bluetoothweight;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -10,10 +11,13 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.Set;
+import java.util.UUID;
 
 public class BluetoothConnect {
     private BluetoothAdapter bluetoothAdapter;
+    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     //打开蓝牙设备
     public void checkBluetoothStatus(Activity activity, BluetoothAdapter bluetoothAdapter1) {
@@ -40,9 +44,13 @@ public class BluetoothConnect {
         Set<BluetoothDevice> bondedDevices = bluetoothAdapter2.getBondedDevices();
         if (bondedDevices.size()>0){
             for (BluetoothDevice device: bondedDevices){
+                adapter.remove(device);
                 adapter.add(device);
             }
         }
-
     }
+
+
+
+
 }
