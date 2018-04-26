@@ -68,30 +68,15 @@
             android:textColor="#000000"
             android:text="连接状态：尚未连接"
             />
-
-    </LinearLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
         <TextView
             android:id="@+id/bluetooth_tv_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:textSize="40sp"
             android:textColor="#000000"
-            android:text="传输信息"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_above="@id/bluetooth_tv_msg"
-            android:text="称重显示："
-            android:textColor="#000000"
+            android:text="传输信息:无传输信息"
             android:textSize="16sp"
             />
-    </RelativeLayout>
+
+
+    </LinearLayout>
 </LinearLayout>
