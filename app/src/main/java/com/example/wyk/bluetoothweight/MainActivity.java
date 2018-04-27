@@ -151,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mDevicePosition = position;
                 view.setVisibility(View.VISIBLE);
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -164,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             //搜索蓝牙设备
             case R.id.bluetooth_search:
-                Log.d("click","search");
+                Log.d("click", "search");
                 //检测蓝牙状态
                 bluetoothConnect.checkBluetoothStatus(MainActivity.this, mBluetoothAdapter);
                 //搜索蓝牙设备
@@ -174,11 +175,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             //连接蓝牙设备
             case R.id.bluetooth_connect:
-                Log.d("click","connect");
+                Log.d("click", "connect");
                 if (mBluetoothAdapter.isDiscovering()) {
                     mBluetoothAdapter.cancelDiscovery();
                 }
-                if (mAdapter.getCount()>0){
+                if (mAdapter.getCount() > 0) {
                     final BluetoothDevice device = mAdapter.getItem(mDevicePosition);
                     //新线程连接
                     new Thread(new Runnable() {
@@ -203,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 sendMsg("D");
                 break;
             case R.id.bluetooth_stop:
-                Log.d("click","stop");
+                Log.d("click", "stop");
                 sendMsg("F");
                 break;
             case R.id.bluetooth_slow_speed:
@@ -311,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             @Override
                             public void run() {
                                 text_msg.setText("接收数据：" + new String(data));
-                                Log.d("message","receive:"+data);
+                                Log.d("message", "receive:" + data);
                             }
                         });
                     }
@@ -328,6 +329,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
     //发送数据
     public void sendMsg(final String msg) {
         try {
