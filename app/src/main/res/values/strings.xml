@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">BlueToothWeight</string>
+    <string name="app_name">BlueToothCar</string>
+    <string name="bluetooth_forward">前进</string>
+    <string name="bluetooth_backward">后退</string>
+    <string name="bluetooth_left">左转</string>
+    <string name="bluetooth_right">右转</string>
+    <string name="bluetooth_stop">停</string>
+    <string name="bluetooth_slow_speed">慢速</string>
+    <string name="bluetooth_middle_speed">中速</string>
+    <string name="bluetooth_fast_speed">快速</string>
 </resources>

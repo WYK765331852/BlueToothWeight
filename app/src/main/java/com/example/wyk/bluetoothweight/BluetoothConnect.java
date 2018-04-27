@@ -40,6 +40,7 @@ public class BluetoothConnect {
         Set<BluetoothDevice> bondedDevices = bluetoothAdapter2.getBondedDevices();
         if (bondedDevices.size()>0){
             for (BluetoothDevice device: bondedDevices){
+                adapter.remove(device);
                 adapter.add(device);
             }
         }

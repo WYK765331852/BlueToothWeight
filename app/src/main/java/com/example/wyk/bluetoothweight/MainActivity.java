@@ -30,35 +30,46 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Spinner mSpinner;
     private Button mBtSearch;
     private Button mBtConnect;
     private Switch mSwitch;
+    private TextView text_state;
+    private TextView text_msg;
+    private TextView text_send_msg;
+    private Button mBtForward;
+    private Button mBtBack;
+    private Button mBtStop;
+    private Button mBtLeft;
+    private Button mBtRight;
+    private Button mBtSlow;
+    private Button mBtMiddle;
+    private Button mBtFast;
 
     private BluetoothConnect bluetoothConnect;
     private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothSocket mBluetoothSocket;
     private ArrayAdapter<BluetoothDevice> mAdapter;
     private List<BluetoothDevice> mSpinnerList = new ArrayList<BluetoothDevice>();
-    private String mMacAdress;
-    private int mDevicePosition;
+    private InputStream mInputStream;
+    private OutputStream mOutputStream;
     private ConnectThread connectThread;
     private ListenThread listenThread;
 
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private static final String NAME = "BlueToothWeight";
+    private int mDevicePosition;
     private int BUFFER_SIZE = 1024;
-    private TextView text_state;
-    private TextView text_msg;
 
     private IntentFilter filter;
+//    filter.addAction("android.intent.action.bluetooth.admin.bluetooth");
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.bluetooth_weigth);
-
+        setContentView(R.layout.bluetooth_car);
         initView();
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -83,6 +94,27 @@ public class MainActivity extends AppCompatActivity {
         mBtSearch = findViewById(R.id.bluetooth_search);
         text_state = findViewById(R.id.bluetooth_tv_status);
         text_msg = findViewById(R.id.bluetooth_tv_msg);
+        text_send_msg = findViewById(R.id.bluetooth_tv_send_msg);
+
+        mBtForward = findViewById(R.id.bluetooth_forward);
+        mBtBack = findViewById(R.id.bluetooth_backward);
+        mBtLeft = findViewById(R.id.bluetooth_left);
+        mBtRight = findViewById(R.id.bluetooth_right);
+        mBtStop = findViewById(R.id.bluetooth_stop);
+        mBtSlow = findViewById(R.id.bluetooth_slow_speed);
+        mBtMiddle = findViewById(R.id.bluetooth_middle_speed);
+        mBtFast = findViewById(R.id.bluetooth_fast_speed);
+
+        mBtConnect.setOnClickListener(this);
+        mBtSearch.setOnClickListener(this);
+        mBtForward.setOnClickListener(this);
+        mBtBack.setOnClickListener(this);
+        mBtLeft.setOnClickListener(this);
+        mBtRight.setOnClickListener(this);
+        mBtStop.setOnClickListener(this);
+        mBtFast.setOnClickListener(this);
+        mBtMiddle.setOnClickListener(this);
+        mBtSlow.setOnClickListener(this);
     }
 
     private void initFilter() {
@@ -111,50 +143,82 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        //搜索蓝牙设备
-        mBtSearch.setOnClickListener(new View.OnClickListener() {
+        //蓝牙列表
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("spinner", mSpinnerList.get(position).getAddress());
+                mDevicePosition = position;
+                view.setVisibility(View.VISIBLE);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    //按钮点击事件监听
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            //搜索蓝牙设备
+            case R.id.bluetooth_search:
+                Log.d("click","search");
                 //检测蓝牙状态
                 bluetoothConnect.checkBluetoothStatus(MainActivity.this, mBluetoothAdapter);
                 //搜索蓝牙设备
                 registerReceiver(mReceiver, filter);
                 //添加已配对过的设备
                 bluetoothConnect.addBondedDevice(mBluetoothAdapter, mAdapter);
-            }
-        });
-        //蓝牙列表
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("spinner", mSpinnerList.get(position).getAddress());
-                mMacAdress = mSpinnerList.get(position).getAddress();
-                mDevicePosition = position;
-                view.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        //连接蓝牙
-        mBtConnect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                break;
+            //连接蓝牙设备
+            case R.id.bluetooth_connect:
+                Log.d("click","connect");
                 if (mBluetoothAdapter.isDiscovering()) {
                     mBluetoothAdapter.cancelDiscovery();
                 }
-                final BluetoothDevice device = mAdapter.getItem(mDevicePosition);
-                //新线程连接
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        connectDevice(device);
-                    }
-                }).start();
-            }
-        });
+                if (mAdapter.getCount()>0){
+                    final BluetoothDevice device = mAdapter.getItem(mDevicePosition);
+                    //新线程连接
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            connectDevice(device);
+                        }
+                    }).start();
+                }
+
+                break;
+            case R.id.bluetooth_forward:
+                sendMsg("a");
+                break;
+            case R.id.bluetooth_backward:
+                sendMsg("B");
+                break;
+            case R.id.bluetooth_left:
+                sendMsg("C");
+                break;
+            case R.id.bluetooth_right:
+                sendMsg("D");
+                break;
+            case R.id.bluetooth_stop:
+                Log.d("click","stop");
+                sendMsg("F");
+                break;
+            case R.id.bluetooth_slow_speed:
+                sendMsg("1");
+                break;
+            case R.id.bluetooth_middle_speed:
+                sendMsg("2");
+                break;
+            case R.id.bluetooth_fast_speed:
+                sendMsg("3");
+                break;
+            default:
+                break;
+
+        }
     }
 
     //    搜索蓝牙设备
@@ -169,7 +233,6 @@ public class MainActivity extends AppCompatActivity {
 
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 Log.d("bonded", "11");
-
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 //避免重复添加已经绑定过的设备，已配对过的跳过
                 if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
@@ -198,26 +261,23 @@ public class MainActivity extends AppCompatActivity {
 
     //连接设备
     private void connectDevice(BluetoothDevice device) {
-
 //        text_state.setText("正在连接");
-
         try {
             //创建Socket
-            BluetoothSocket socket = device.createRfcommSocketToServiceRecord(MY_UUID);
+            mBluetoothSocket = device.createRfcommSocketToServiceRecord(MY_UUID);
             //启动连接线程
-            connectThread = new ConnectThread(socket, true);
+            connectThread = new ConnectThread(mBluetoothSocket, true);
             connectThread.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+
     private class ConnectThread extends Thread {
 
         private BluetoothSocket socket;
         private boolean activeConnect;
-        InputStream inputStream;
-        OutputStream outputStream;
 
         private ConnectThread(BluetoothSocket socket, boolean connect) {
             this.socket = socket;
@@ -237,14 +297,13 @@ public class MainActivity extends AppCompatActivity {
                         text_state.setText("连接状态：连接成功");
                     }
                 });
-                inputStream = socket.getInputStream();
-                outputStream = socket.getOutputStream();
-
+                mInputStream = socket.getInputStream();
+                mOutputStream = socket.getOutputStream();
                 byte[] buffer = new byte[BUFFER_SIZE];
                 int bytes;
                 while (true) {
                     //读取数据
-                    bytes = inputStream.read(buffer);
+                    bytes = mInputStream.read(buffer);
                     if (bytes > 0) {
                         final byte[] data = new byte[bytes];
                         System.arraycopy(buffer, 0, data, 0, bytes);
@@ -252,6 +311,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 text_msg.setText("接收数据：" + new String(data));
+                                Log.d("message","receive:"+data);
                             }
                         });
                     }
@@ -267,18 +327,20 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        //发送数据
-        public void sendMsg(final String msg) {
-
+    }
+    //发送数据
+    public void sendMsg(final String msg) {
+        try {
+            mOutputStream = mBluetoothSocket.getOutputStream();
             byte[] bytes = msg.getBytes();
-            if (outputStream != null) {
+            if (mOutputStream != null) {
                 try {
                     //发送数据
-                    outputStream.write(bytes);
-                    text_msg.post(new Runnable() {
+                    mOutputStream.write(bytes);
+                    text_send_msg.post(new Runnable() {
                         @Override
                         public void run() {
-                            text_msg.setText("发送数据：" + msg);
+                            text_send_msg.setText("发送数据：" + msg);
                         }
                     });
                 } catch (IOException e) {
@@ -286,12 +348,15 @@ public class MainActivity extends AppCompatActivity {
                     text_msg.post(new Runnable() {
                         @Override
                         public void run() {
-                            text_msg.setText("发送数据错误：" + msg);
+                            text_send_msg.setText("发送数据错误：" + msg);
                         }
                     });
                 }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
     }
 
     //监听线程

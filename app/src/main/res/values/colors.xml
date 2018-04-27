@@ -5,6 +5,8 @@
     <color name="colorAccent">#70C6C5</color>
     <color name="pig_peppa">#EDC5CD</color>
     <color name="pig_dad">#70C6C5</color>
+    <color name="bluetooth_white">#ffffff</color>
+    <color name="bluetooth_black">#000000</color>
     <!--<color name="colorPrimary">#3F51B5</color>-->
     <!--<color name="colorPrimaryDark">#303F9F</color>-->
     <!--<color name="colorAccent">#FF4081</color>-->

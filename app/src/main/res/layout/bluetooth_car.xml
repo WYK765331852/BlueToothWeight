@@ -3,29 +3,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_margin="10dp"
         android:orientation="horizontal">
+
         <Switch
+            android:id="@+id/bluetooth_switch"
             android:layout_width="0dp"
             android:layout_height="20dp"
-            android:id="@+id/bluetooth_switch"
             android:layout_gravity="center_vertical"
             android:layout_weight="2"
             android:checked="false"
             android:text="蓝牙开关："
-            android:textSize="16sp"
-            />
+            android:textSize="16sp" />
+
         <Button
             android:id="@+id/bluetooth_search"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="搜索"
-            android:textColor="#ffffff"
             android:background="@drawable/bluetooth_bt_shape_car"
+            android:text="搜索"
+            android:textColor="@color/bluetooth_white"
 
             />
     </LinearLayout>
@@ -35,14 +37,14 @@
         android:layout_height="40dp"
         android:layout_margin="10dp"
         android:orientation="horizontal">
+
         <Spinner
             android:id="@+id/bluetooth_spinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="2"
-            android:autofillHints="蓝牙列表"
-            >
+            android:autofillHints="蓝牙列表">
         </Spinner>
 
         <Button
@@ -50,33 +52,145 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="连接"
-            android:textColor="#ffffff"
             android:background="@drawable/bluetooth_bt_shape_car"
-            />
+            android:text="连接"
+            android:textColor="@color/bluetooth_white" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
         <TextView
             android:id="@+id/bluetooth_tv_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="#000000"
             android:text="连接状态：尚未连接"
-            />
+            android:textColor="@color/bluetooth_black"
+            android:textSize="16sp" />
+
         <TextView
             android:id="@+id/bluetooth_tv_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:text="传输信息:无传输信息"
-            android:textSize="16sp"
-            />
+            android:text="接收数据：无传输信息"
+            android:textColor="@color/bluetooth_black"
+            android:textSize="16sp" />
+        <TextView
+            android:id="@+id/bluetooth_tv_send_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发送数据：无传输信息"
+            android:textColor="@color/bluetooth_black"
+            android:textSize="16sp" />
 
 
     </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+        <Button
+            android:id="@+id/bluetooth_forward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/bluetooth_bt_shape_car"
+            android:text="@string/bluetooth_forward"
+            android:textColor="@color/bluetooth_white"
+            android:textSize="16sp"
+            />
+        <Button
+            android:id="@+id/bluetooth_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/bluetooth_forward"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bluetooth_bt_shape_car"
+            android:text="@string/bluetooth_stop"
+            android:textColor="@color/bluetooth_white"
+            android:textSize="16sp"
+            />
+
+        <Button
+            android:id="@+id/bluetooth_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/bluetooth_stop"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/bluetooth_bt_shape_car"
+            android:text="@string/bluetooth_left"
+            android:textColor="@color/bluetooth_white"
+            android:textSize="16sp"
+            />
+        <Button
+            android:id="@+id/bluetooth_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/bluetooth_stop"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/bluetooth_bt_shape_car"
+            android:text="@string/bluetooth_right"
+            android:textColor="@color/bluetooth_white"
+            android:textSize="16sp"
+            />
+        <Button
+            android:id="@+id/bluetooth_backward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/bluetooth_stop"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bluetooth_bt_shape_car"
+            android:text="@string/bluetooth_backward"
+            android:textColor="@color/bluetooth_white"
+            android:textSize="16sp"
+            />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+        <Button
+            android:id="@+id/bluetooth_middle_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/bluetooth_bt_shape_car"
+            android:text="@string/bluetooth_middle_speed"
+            android:textColor="@color/bluetooth_white"
+            android:textSize="16sp"
+            />
+
+        <Button
+            android:id="@+id/bluetooth_slow_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/bluetooth_middle_speed"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/bluetooth_bt_shape_car"
+            android:text="@string/bluetooth_slow_speed"
+            android:textColor="@color/bluetooth_white"
+            android:textSize="16sp"
+            />
+        <Button
+            android:id="@+id/bluetooth_fast_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/bluetooth_middle_speed"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/bluetooth_bt_shape_car"
+            android:text="@string/bluetooth_fast_speed"
+            android:textColor="@color/bluetooth_white"
+            android:textSize="16sp"
+            />
+
+    </RelativeLayout>
+
 </LinearLayout>
