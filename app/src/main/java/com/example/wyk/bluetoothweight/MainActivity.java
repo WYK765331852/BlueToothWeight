@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.bluetooth_forward:
-                sendMsg("a");
+                sendMsg("A");
                 break;
             case R.id.bluetooth_backward:
                 sendMsg("B");
