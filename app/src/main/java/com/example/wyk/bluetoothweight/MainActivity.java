@@ -192,29 +192,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.bluetooth_forward:
-                sendMsg("A");
+                sendMsg("ONA");
                 break;
             case R.id.bluetooth_backward:
-                sendMsg("B");
+                sendMsg("ONB");
                 break;
             case R.id.bluetooth_left:
-                sendMsg("C");
+                sendMsg("ONC");
                 break;
             case R.id.bluetooth_right:
-                sendMsg("D");
+                sendMsg("OND");
                 break;
             case R.id.bluetooth_stop:
                 Log.d("click", "stop");
-                sendMsg("F");
+                sendMsg("ONF");
                 break;
             case R.id.bluetooth_slow_speed:
-                sendMsg("1");
+                sendMsg("ON1");
                 break;
             case R.id.bluetooth_middle_speed:
-                sendMsg("2");
+                sendMsg("ON2");
                 break;
             case R.id.bluetooth_fast_speed:
-                sendMsg("3");
+                sendMsg("ON3");
                 break;
             default:
                 break;
@@ -276,6 +276,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private class ConnectThread extends Thread {
+        private String str = null;
+        private boolean start=false;
+        int len = 0;
 
         private BluetoothSocket socket;
         private boolean activeConnect;
@@ -300,22 +303,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
                 mInputStream = socket.getInputStream();
                 mOutputStream = socket.getOutputStream();
-                byte[] buffer = new byte[BUFFER_SIZE];
-                int bytes;
+//                byte[] buffer = new byte[BUFFER_SIZE];
+//                int bytes;
+
                 while (true) {
-                    //读取数据
-                    bytes = mInputStream.read(buffer);
-                    if (bytes > 0) {
-                        final byte[] data = new byte[bytes];
-                        System.arraycopy(buffer, 0, data, 0, bytes);
+                    byte[] buff = new byte[1];
+                    len = mInputStream.read(buff);
+                    String strBuff = new String(buff);
+
+                    if (strBuff.equals("$")){
+                        start = true;
+                        str = "";
+                    }
+                    if (start == true){
+                        str += strBuff;
+                    }
+                    if (strBuff.equals("#")){
+                        start = false;
                         text_msg.post(new Runnable() {
                             @Override
                             public void run() {
-                                text_msg.setText("接收数据：" + new String(data));
-                                Log.d("message", "receive:" + data);
+                                text_msg.setText("接收数据：" + new String(str));
+                                Log.d("message", "receive:" + new String(str));
                             }
                         });
                     }
+//                    //读取数据
+//                    bytes = mInputStream.read(buffer);
+//                    if (bytes > 0) {
+//                        final byte[] data = new byte[bytes];
+//                        System.arraycopy(buffer, 0, data, 0, bytes);
+//                        text_msg.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                text_msg.setText("接收数据：" + new String(data));
+//                                Log.d("message", "receive:" + new String(data));
+//                            }
+//                        });
+//                    }
+
                 }
             } catch (IOException e) {
                 e.printStackTrace();
