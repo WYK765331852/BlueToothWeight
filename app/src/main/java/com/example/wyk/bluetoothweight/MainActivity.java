@@ -218,6 +218,9 @@ public class MainActivity extends AppCompatActivity {
         private boolean activeConnect;
         InputStream inputStream;
         OutputStream outputStream;
+        private String str = "";
+        private int len = 0;
+        private boolean start = false;
 
         private ConnectThread(BluetoothSocket socket, boolean connect) {
             this.socket = socket;
@@ -240,33 +243,50 @@ public class MainActivity extends AppCompatActivity {
                 inputStream = socket.getInputStream();
                 outputStream = socket.getOutputStream();
 
-                byte[] buffer = new byte[BUFFER_SIZE];
-                int bytes;
+//                byte[] buffer = new byte[BUFFER_SIZE];
+//                int bytes;
                 while (true) {
-                    try {
-                        Thread.sleep(300);
-                        //读取数据
-                        bytes = inputStream.read(buffer);
-                        if (bytes > 0) {
-                            final byte[] data = new byte[bytes];
-                            System.arraycopy(buffer, 0, data, 0, bytes);
-                            int i = 0;
-                            while (data[i] != '#') {
-                                i++;
-                            }
-                            final int a = data[i + 1] + 256 * data[i + 2];
-                            text_msg.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    text_msg.setText("接收数据：" + new String(String.valueOf(a)));
-                                }
-                            });
-                        }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    byte[] buff = new byte[1];
+                    len = inputStream.read(buff);
+                    String strBuff = new String(buff);
 
+                    if (strBuff.equals("$")) {
+                        start = true;
+                        str = "";
+                    }
+                    if (start == true) {
+                        str += strBuff;
+                    }
+                    if (strBuff.equals("#")) {
+                        start = false;
+                        text_msg.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                text_msg.setText("接收数据：" + new String(str));
+                                Log.d("message", "receive:" + new String(str));
+                            }
+                        });
+                    }
                 }
+//                while (true) {
+//                        //读取数据
+//                        bytes = inputStream.read(buffer);
+//                        if (bytes > 0) {
+//                            final byte[] data = new byte[bytes];
+//                            System.arraycopy(buffer, 0, data, 0, bytes);
+//                            int i = 0;
+//                            while (data[i] != '#') {
+//                                i++;
+//                            }
+//                            final int a = data[i + 1] + 256 * data[i + 2];
+//                            text_msg.post(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    text_msg.setText("接收数据：" + new String(String.valueOf(a)));
+//                                }
+//                            });
+//                        }
+//                }
             } catch (IOException e) {
                 e.printStackTrace();
                 text_state.post(new Runnable() {
