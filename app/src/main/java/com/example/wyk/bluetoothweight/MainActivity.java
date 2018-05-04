@@ -243,18 +243,29 @@ public class MainActivity extends AppCompatActivity {
                 byte[] buffer = new byte[BUFFER_SIZE];
                 int bytes;
                 while (true) {
-                    //读取数据
-                    bytes = inputStream.read(buffer);
-                    if (bytes > 0) {
-                        final byte[] data = new byte[bytes];
-                        System.arraycopy(buffer, 0, data, 0, bytes);
-                        text_msg.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                text_msg.setText("接收数据：" + new String(data));
+                    try {
+                        Thread.sleep(300);
+                        //读取数据
+                        bytes = inputStream.read(buffer);
+                        if (bytes > 0) {
+                            final byte[] data = new byte[bytes];
+                            System.arraycopy(buffer, 0, data, 0, bytes);
+                            int i = 0;
+                            while (data[i] != '#') {
+                                i++;
                             }
-                        });
+                            final int a = data[i + 1] + 256 * data[i + 2];
+                            text_msg.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    text_msg.setText("接收数据：" + new String(String.valueOf(a)));
+                                }
+                            });
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
+
                 }
             } catch (IOException e) {
                 e.printStackTrace();
