@@ -8,8 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +24,9 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -277,8 +278,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private class ConnectThread extends Thread {
         private String str = null;
-        private boolean start=false;
+        private boolean start = false;
         int len = 0;
+
 
         private BluetoothSocket socket;
         private boolean activeConnect;
@@ -311,15 +313,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     len = mInputStream.read(buff);
                     String strBuff = new String(buff);
 
-                    if (strBuff.equals("$")){
+
+                    if (strBuff.equals("$")) {
                         start = true;
                         str = "";
                     }
-                    if (start == true){
+                    if (start == true) {
                         str += strBuff;
+
                     }
-                    if (strBuff.equals("#")){
+                    if (strBuff.equals("#")) {
                         start = false;
+
                         text_msg.post(new Runnable() {
                             @Override
                             public void run() {
@@ -328,7 +333,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             }
                         });
                     }
-//                    //读取数据
+                    //读取数据
+//                try {
 //                    bytes = mInputStream.read(buffer);
 //                    if (bytes > 0) {
 //                        final byte[] data = new byte[bytes];
@@ -337,12 +343,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                            @Override
 //                            public void run() {
 //                                text_msg.setText("接收数据：" + new String(data));
-//                                Log.d("message", "receive:" + new String(data));
+//                                Log.d("aaaa", "receive:" + new String(data));
 //                            }
 //                        });
 //                    }
-
+//                } catch (IOException e1) {
+//                    e1.printStackTrace();
+//                }
                 }
+
             } catch (IOException e) {
                 e.printStackTrace();
                 text_state.post(new Runnable() {
@@ -355,6 +364,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
+
 
     //发送数据
     public void sendMsg(final String msg) {
