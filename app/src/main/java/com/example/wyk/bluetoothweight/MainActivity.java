@@ -257,36 +257,45 @@ public class MainActivity extends AppCompatActivity {
                     if (strBuff.equals("$")) {
                         start = true;
                         str = "";
-                        Log.d("aaaa","$");
+                        Log.d("aaaa", "$");
                     }
                     if (start == true) {
 //                        str += strBuff;
                         count++;
-                        if (count == 1){
-                            Log.d("aaaa","count = 1");
+                        Log.d("aaaa", "count=" + count);
+                        if (count == 1) {
+                            Log.d("aaaa", "count = 1");
+                            Log.d("aaaa", "strBuff: " + strBuff);
                         }
                         if (count == 2) {
                             str = bytesToHexString(buff);
-                            weight1 = Integer.valueOf(str);
-                            Log.d("aaaa","count = 2");
+                            weight1 = Integer.parseInt(str, 16);
+                            Log.d("aaaa", "count = 2" + " weight1=" + weight1);
+                            Log.d("aaaa", "count = 2" + " str1=" + str);
+
+
                         }
                         if (count == 3) {
                             str = bytesToHexString(buff);
-                            weight2 = Integer.valueOf(str);
-                            Log.d("aaaa","count = 3");
+                            //16进制字符转化为十进制整型
+                            weight2 = Integer.parseInt(str, 16);
+                            Log.d("aaaa", "count = 3"+" weight2 = "+weight2);
+                            Log.d("aaaa", "count = 3" + " str2=" + str);
+
                         }
                     }
                     if (strBuff.equals("#")) {
                         start = false;
-                        result = weight2*256 + weight1;
-                        Log.d("aaaa","#");
+                        result = weight1 * 256 + weight2;
+                        Log.d("aaaa", "#");
                         text_msg.post(new Runnable() {
                             @Override
                             public void run() {
-                                text_msg.setText("接收数据：" + new String(str));
-                                Log.d("message", "receive:" + new String(str));
+                                text_msg.setText("接收数据：" + new String(String.valueOf(result)));
+                                Log.d("message", "receive:" + new String(String.valueOf(result)));
                             }
                         });
+                        count = 0;
                     }
                 }
 //                while (true) {
@@ -352,9 +361,9 @@ public class MainActivity extends AppCompatActivity {
         String result = "";
         for (int i = 0; i < bytes.length; i++) {
             String hexString = Integer.toHexString(bytes[i] & 0xFF);
+
             if (hexString.length() == 1) {
-//                hexString = '0' + hexString;
-                result = hexString;
+                hexString = '0' + hexString;
             }
             result += hexString.toUpperCase();
         }
