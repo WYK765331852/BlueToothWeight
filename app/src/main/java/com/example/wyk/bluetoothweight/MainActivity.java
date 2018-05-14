@@ -220,6 +220,10 @@ public class MainActivity extends AppCompatActivity {
         OutputStream outputStream;
         private String str = "";
         private int len = 0;
+        private int count = 0;
+        private int weight1 = 0;
+        private int weight2 = 0;
+        private int result = 0;
         private boolean start = false;
 
         private ConnectThread(BluetoothSocket socket, boolean connect) {
@@ -253,12 +257,29 @@ public class MainActivity extends AppCompatActivity {
                     if (strBuff.equals("$")) {
                         start = true;
                         str = "";
+                        Log.d("aaaa","$");
                     }
                     if (start == true) {
-                        str += strBuff;
+//                        str += strBuff;
+                        count++;
+                        if (count == 1){
+                            Log.d("aaaa","count = 1");
+                        }
+                        if (count == 2) {
+                            str = bytesToHexString(buff);
+                            weight1 = Integer.valueOf(str);
+                            Log.d("aaaa","count = 2");
+                        }
+                        if (count == 3) {
+                            str = bytesToHexString(buff);
+                            weight2 = Integer.valueOf(str);
+                            Log.d("aaaa","count = 3");
+                        }
                     }
                     if (strBuff.equals("#")) {
                         start = false;
+                        result = weight2*256 + weight1;
+                        Log.d("aaaa","#");
                         text_msg.post(new Runnable() {
                             @Override
                             public void run() {
@@ -298,6 +319,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+
         //发送数据
         public void sendMsg(final String msg) {
 
@@ -323,6 +345,20 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    //单片机发送的数据为16进制，先进行转化
+    public static String bytesToHexString(byte[] bytes) {
+        String result = "";
+        for (int i = 0; i < bytes.length; i++) {
+            String hexString = Integer.toHexString(bytes[i] & 0xFF);
+            if (hexString.length() == 1) {
+//                hexString = '0' + hexString;
+                result = hexString;
+            }
+            result += hexString.toUpperCase();
+        }
+        return result;
     }
 
     //监听线程
